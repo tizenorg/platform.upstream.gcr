@@ -1,29 +1,30 @@
 Name:           gcr
-Version:        3.4.1
+Version:        3.7.2
 Release:        0
 Summary:        Library for Crypto UI related task
-License:        LGPL-2.1+
+License:        GPLv2
 Group:          System/Libraries
 Url:            http://www.gnome.org
-Source0:        http://download.gnome.org/sources/gcr/3.4/%{name}-%{version}.tar.xz
-BuildRequires:  gobject-introspection-devel
+Source0:        http://download.gnome.org/sources/gcr/3.7/%{name}-%{version}.tar.xz
 BuildRequires:  gpg2
 BuildRequires:  intltool
-BuildRequires:	libtasn1-devel
+BuildRequires:  libtasn1-devel
 BuildRequires:  libgcrypt-devel >= 1.2.2
 BuildRequires:  shared-mime-info
 BuildRequires:  update-desktop-files
+BuildRequires:  gnome-common
+BuildRequires:  gtk-doc
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(glib-2.0) >= 2.30.0
 BuildRequires:  pkgconfig(gmodule-no-export-2.0)
 BuildRequires:  pkgconfig(gobject-2.0)
+BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(gthread-2.0)
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.0
 BuildRequires:  pkgconfig(libtasn1)
 BuildRequires:  pkgconfig(p11-kit-1) >= 0.6
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
 GCR is a library for displaying certificates, and crypto UI, accessing
@@ -43,7 +44,8 @@ This packages provides the viewer for crypto files on the GNOME desktop.
 %package data
 Summary:        Data and icon set for gcr
 Group:          System/Libraries
-%glib2_gsettings_schema_requires
+Requires(post): glib2-tools
+Requires(postun): glib2-tools
 
 %description data
 This package provides the GSettings schemas and a collection of icons
@@ -119,7 +121,8 @@ GCK is a library for accessing PKCS#11 modules like smart cards, in a
 %setup -q
 
 %build
-%configure
+%autogen \
+  --disable-gtk-doc-html
 make
 
 %install
@@ -157,7 +160,7 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 
 %files viewer
 %defattr(-,root,root)
-%doc COPYING
+%license COPYING
 %{_bindir}/gcr-viewer
 %{_datadir}/applications/gcr-viewer.desktop
 %{_datadir}/mime/packages/gcr-crypto-types.xml
@@ -180,7 +183,7 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 
 %files -n libgcr
 %defattr (-, root, root)
-%doc COPYING
+%license COPYING
 %{_libdir}/libgcr-3.so.*
 %{_libdir}/libgcr-base-3.so.*
 %{_datadir}/gcr-3/
@@ -196,11 +199,10 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_libdir}/pkgconfig/gcr-3.pc
 %{_libdir}/pkgconfig/gcr-base-3.pc
 %{_includedir}/gcr-3/
-%{_datadir}/gtk-doc/html/gcr-3/
 
 %files -n libgck
 %defattr (-, root, root)
-%doc COPYING
+%license COPYING
 %{_libdir}/libgck-1.so.*
 
 %files -n typelib-Gck
@@ -212,7 +214,6 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_libdir}/libgck-1.so
 %{_libdir}/pkgconfig/gck-1.pc
 %{_includedir}/gck-1/
-%{_datadir}/gtk-doc/html/gck/
 %{_datadir}/gir-1.0/Gck-1.gir
 %{_datadir}/gir-1.0/Gcr-3.gir
 
