@@ -1,19 +1,22 @@
+%define baseline 3.7
+
+
 Name:           gcr
-Version:        3.7.2
+Version:        3.7.5
 Release:        0
 Summary:        Library for Crypto UI related task
-License:        GPLv2
-Group:          System/Libraries
+License:        LGPL-2.1+
+Group:          Security/Crypto Libraries
 Url:            http://www.gnome.org
-Source0:        http://download.gnome.org/sources/gcr/3.7/%{name}-%{version}.tar.xz
-BuildRequires:  gpg2
-BuildRequires:  intltool
-BuildRequires:  libtasn1-devel
-BuildRequires:  libgcrypt-devel >= 1.2.2
-BuildRequires:  shared-mime-info
-BuildRequires:  update-desktop-files
+Source0:        http://download.gnome.org/sources/gcr/%{baseline}/%{name}-%{version}.tar.xz
 BuildRequires:  gnome-common
+BuildRequires:  gpg2
 BuildRequires:  gtk-doc
+BuildRequires:  intltool
+BuildRequires:  libgcrypt-devel >= 1.2.2
+BuildRequires:  libtasn1-devel
+BuildRequires:  shared-mime-info
+BuildRequires:  update-desktop-files 
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
@@ -34,16 +37,18 @@ desktop.
 GCK is a library for accessing PKCS#11 modules like smart cards, in a
 (G)object oriented way.
 
+
 %package viewer
 Summary:        Viewer for Crypto Files
-Group:          Productivity/Security
+Group:          Security/Certificate Management
 
 %description viewer
 This packages provides the viewer for crypto files on the GNOME desktop.
 
+
 %package data
 Summary:        Data and icon set for gcr
-Group:          System/Libraries
+Group:          Security/Crypto Libraries
 Requires(post): glib2-tools
 Requires(postun): glib2-tools
 
@@ -51,12 +56,14 @@ Requires(postun): glib2-tools
 This package provides the GSettings schemas and a collection of icons
 needed by libgcr.
 
+
 %package prompter
 Summary:        Prompt dialog for Crypto UI related task
 Group:          System/Libraries
 
 %description prompter
 This package provides the prompt dialog needed by libgcr.
+
 
 %package -n libgcr
 Summary:        Library for Crypto UI related task
@@ -68,6 +75,7 @@ Requires:       %{name}-prompter >= %{version}
 GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.
 
+
 %package -n typelib-Gcr
 Summary:        Library for Crypto UI related task -- Introspection bindings
 Group:          System/Libraries
@@ -78,15 +86,51 @@ key stores.
 
 This package provides the GObject Introspection bindings for GCR.
 
+
 %package -n libgcr-devel
 Summary:        Library for Crypto UI related task - Development Files
-Group:          Development/Libraries/GNOME
+Group:          Development/Libraries
 Requires:       libgcr = %{version}
 Requires:       typelib-Gcr = %{version}
 
 %description -n libgcr-devel
 GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.
+
+
+%package -n libgcr-ui
+Summary:        Library for Crypto UI related task
+Group:          System/Libraries
+Requires:       %{name}-data >= %{version}
+Requires:       %{name}-prompter >= %{version}
+
+%description -n libgcr-ui
+GCR is a library for displaying certificates, and crypto UI, accessing
+key stores.ey stores.
+
+
+%package -n typelib-GcrUi
+Summary:        Library for Crypto UI related task -- Introspection bindings
+Group:          System/Libraries
+
+%description -n typelib-GcrUi
+GCR is a library for displaying certificates, and crypto UI, accessing
+key stores.
+
+This package provides the GObject Introspection bindings for GCR.
+
+
+%package -n libgcr-ui-devel
+Summary:        Library for Crypto UI related task - Development Files
+Group:          Development/Libraries
+Requires:       libgcr-ui = %{version}
+Requires:       libgcr-devel = %{version}
+Requires:       typelib-Gcr = %{version}
+
+%description -n libgcr-ui-devel
+GCR is a library for displaying certificates, and crypto UI, accessing
+key stores.
+
 
 %package -n libgck
 Summary:        GObject library to access for PKCS#11 modules
@@ -97,9 +141,10 @@ Provides:       gck = %{version}
 GCK is a library for accessing PKCS#11 modules like smart cards, in a
 (G)object oriented way.
 
+
 %package -n typelib-Gck
 Summary:        GObject library to access for PKCS#11 modules -- Introspection bindings
-Group:          System/Libraries
+Group:          Security/Crypto Libraries
 
 %description -n typelib-Gck
 GCK is a library for accessing PKCS#11 modules like smart cards, in a
@@ -107,9 +152,10 @@ GCK is a library for accessing PKCS#11 modules like smart cards, in a
 
 This package provides the GObject Introspection bindings for GCK.
 
+
 %package -n libgck-devel
 Summary:        GObject library to access for PKCS#11 modules - Development Files
-Group:          Development/Libraries/GNOME
+Group:          Development/Libraries
 Requires:       libgck = %{version}
 Requires:       typelib-Gck = %{version}
 
@@ -121,8 +167,10 @@ GCK is a library for accessing PKCS#11 modules like smart cards, in a
 %setup -q
 
 %build
+
 %autogen \
-  --disable-gtk-doc-html
+ --disable-gtk-doc-html
+
 make
 
 %install
@@ -158,12 +206,18 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 
 %postun -n libgck -p /sbin/ldconfig
 
+%post -n libgcr-ui -p /sbin/ldconfig
+
+%postun -n libgcr-ui -p /sbin/ldconfig
+
+
 %files viewer
 %defattr(-,root,root)
 %license COPYING
 %{_bindir}/gcr-viewer
 %{_datadir}/applications/gcr-viewer.desktop
 %{_datadir}/mime/packages/gcr-crypto-types.xml
+
 
 %files data
 %defattr(-, root, root)
@@ -174,12 +228,14 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_datadir}/GConf/gsettings/org.gnome.crypto.pgp_keyservers.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.crypto.pgp.gschema.xml
 
+
 %files prompter
 %defattr(-, root, root)
 %{_libexecdir}/gcr-prompter
 %{_datadir}/applications/gcr-prompter.desktop
 %{_datadir}/dbus-1/services/org.gnome.keyring.PrivatePrompter.service
 %{_datadir}/dbus-1/services/org.gnome.keyring.SystemPrompter.service
+
 
 %files -n libgcr
 %defattr (-, root, root)
@@ -188,9 +244,11 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_libdir}/libgcr-base-3.so.*
 %{_datadir}/gcr-3/
 
+
 %files -n typelib-Gcr
 %defattr(-,root,root)
 %{_libdir}/girepository-1.0/Gcr-3.typelib
+
 
 %files -n libgcr-devel
 %defattr (-, root, root)
@@ -200,14 +258,17 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_libdir}/pkgconfig/gcr-base-3.pc
 %{_includedir}/gcr-3/
 
+
 %files -n libgck
 %defattr (-, root, root)
 %license COPYING
 %{_libdir}/libgck-1.so.*
 
+
 %files -n typelib-Gck
 %defattr(-,root,root)
 %{_libdir}/girepository-1.0/Gck-1.typelib
+
 
 %files -n libgck-devel
 %defattr (-, root, root)
@@ -216,5 +277,24 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_includedir}/gck-1/
 %{_datadir}/gir-1.0/Gck-1.gir
 %{_datadir}/gir-1.0/Gcr-3.gir
+
+
+%files -n libgcr-ui
+%defattr (-, root, root)
+%license COPYING
+%{_libdir}/libgcr-ui-3.so.1
+%{_libdir}/libgcr-ui-3.so.1.0.0
+%{_datadir}/gir-1.0/GcrUi-3.gir
+
+
+%files -n typelib-GcrUi
+%defattr(-,root,root)
+%{_libdir}/girepository-1.0/GcrUi-3.typelib
+
+
+%files -n libgcr-ui-devel
+%defattr (-, root, root)
+%{_libdir}/libgcr-ui-3.so
+%{_libdir}/pkgconfig/gcr-ui-3.pc
 
 %lang_package
