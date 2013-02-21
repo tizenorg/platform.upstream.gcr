@@ -1,3 +1,6 @@
+* Thu Feb 21 2013 Anas Nashif <anas.nashif@intel.com> accepted/trunk/20130221.003720@15de6a2
+- Add baselibs to support multilib
+
 * Wed Feb 20 2013 Anas Nashif <anas.nashif@intel.com> accepted/trunk/20130212.173957@54ee2ea
 - lang package name fixed
 

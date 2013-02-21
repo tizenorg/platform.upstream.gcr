@@ -175,7 +175,6 @@ make
 
 %install
 %make_install
-find %{buildroot} -type f -name "*.la" -delete -print
 # Cleanup installed test modules
 rm %{buildroot}%{_libdir}/libmock-test-module.so
 %tizen_update_desktop_file gcr-prompter
