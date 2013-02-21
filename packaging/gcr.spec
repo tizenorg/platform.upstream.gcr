@@ -297,4 +297,4 @@ rm %{buildroot}%{_libdir}/libmock-test-module.so
 %{_libdir}/libgcr-ui-3.so
 %{_libdir}/pkgconfig/gcr-ui-3.pc
 
-%lang_package
+%lang_package -n libgcr
