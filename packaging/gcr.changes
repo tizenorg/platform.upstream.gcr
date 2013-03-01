@@ -1,3 +1,6 @@
+* Fri Mar 01 2013 Corentin Lecouvey <corentin.lecouvey@eurogiciel.fr> 3.7.5@b91ad24
+- Bump to 3.7.5+18+gdca19a7 (fix TZPC-1101)
+
 * Thu Feb 21 2013 Anas Nashif <anas.nashif@intel.com> accepted/trunk/20130221.003720@15de6a2
 - Add baselibs to support multilib
 
