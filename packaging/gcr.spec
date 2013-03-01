@@ -2,7 +2,7 @@
 
 
 Name:           gcr
-Version:        3.7.5
+Version:        3.7.5+18+gdca19a7
 Release:        0
 Summary:        Library for Crypto UI related task
 License:        LGPL-2.1+
@@ -175,8 +175,6 @@ make
 
 %install
 %make_install
-# Cleanup installed test modules
-rm %{buildroot}%{_libdir}/libmock-test-module.so
 %tizen_update_desktop_file gcr-prompter
 %tizen_update_desktop_file gcr-viewer
 %find_lang %{name}
