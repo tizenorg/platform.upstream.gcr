@@ -2,7 +2,7 @@
 
 
 Name:           gcr
-Version:        3.7.92
+Version:        3.8.0
 Release:        0
 Summary:        Library for Crypto UI related task
 License:        LGPL-2.1+
