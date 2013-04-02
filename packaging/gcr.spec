@@ -1,4 +1,4 @@
-%define baseline 3.7
+%define baseline 3.8
 
 
 Name:           gcr
