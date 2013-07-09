@@ -1,5 +1,6 @@
 %define baseline 3.8
 
+%define enable_gtk no
 
 Name:           gcr
 Version:        3.8.2
@@ -25,7 +26,9 @@ BuildRequires:  pkgconfig(gmodule-no-export-2.0)
 BuildRequires:  pkgconfig(gobject-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(gthread-2.0)
+%if %{?enable_gtk} != no
 BuildRequires:  pkgconfig(gtk+-3.0) >= 3.0
+%endif
 BuildRequires:  pkgconfig(libtasn1)
 BuildRequires:  pkgconfig(p11-kit-1) >= 0.6
 
@@ -38,12 +41,14 @@ GCK is a library for accessing PKCS#11 modules like smart cards, in a
 (G)object oriented way.
 
 
+%if %{?enable_gtk} != no
 %package viewer
 Summary:        Viewer for Crypto Files
 Group:          Security/Certificate Management
 
 %description viewer
 This packages provides the viewer for crypto files on the GNOME desktop.
+%endif
 
 
 %package data
@@ -57,19 +62,23 @@ This package provides the GSettings schemas and a collection of icons
 needed by libgcr.
 
 
+%if %{?enable_gtk} != no
 %package prompter
 Summary:        Prompt dialog for Crypto UI related task
 Group:          System/Libraries
 
 %description prompter
 This package provides the prompt dialog needed by libgcr.
+%endif
 
 
 %package -n libgcr
 Summary:        Library for Crypto UI related task
 Group:          System/Libraries
 Requires:       %{name}-data >= %{version}
+%if %{?enable_gtk} != no
 Requires:       %{name}-prompter >= %{version}
+%endif
 
 %description -n libgcr
 GCR is a library for displaying certificates, and crypto UI, accessing
@@ -98,6 +107,7 @@ GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.
 
 
+%if %{?enable_gtk} != no
 %package -n libgcr-ui
 Summary:        Library for Crypto UI related task
 Group:          System/Libraries
@@ -108,7 +118,6 @@ Requires:       %{name}-prompter >= %{version}
 GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.ey stores.
 
-
 %package -n typelib-GcrUi
 Summary:        Library for Crypto UI related task -- Introspection bindings
 Group:          System/Libraries
@@ -118,18 +127,23 @@ GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.
 
 This package provides the GObject Introspection bindings for GCR.
+%endif
 
 
+%if %{?enable_gtk} != no
 %package -n libgcr-ui-devel
 Summary:        Library for Crypto UI related task - Development Files
 Group:          Development/Libraries
 Requires:       libgcr-ui = %{version}
 Requires:       libgcr-devel = %{version}
 Requires:       typelib-Gcr = %{version}
+%endif
 
+%if %{?enable_gtk} != no
 %description -n libgcr-ui-devel
 GCR is a library for displaying certificates, and crypto UI, accessing
 key stores.
+%endif
 
 
 %package -n libgck
@@ -169,16 +183,20 @@ GCK is a library for accessing PKCS#11 modules like smart cards, in a
 %build
 
 %autogen \
+ --with-gtk=%{?enable_gtk} \
  --disable-gtk-doc-html
 
 make
 
 %install
 %make_install
+%if %{?enable_gtk} != no
 %tizen_update_desktop_file gcr-prompter
 %tizen_update_desktop_file gcr-viewer
+%endif
 %find_lang %{name}
 
+%if %{?enable_gtk} != no
 %post viewer
 %desktop_database_post
 %mime_database_post
@@ -186,6 +204,7 @@ make
 %postun viewer
 %desktop_database_postun
 %mime_database_postun
+%endif
 
 %post data
 %glib2_gsettings_schema_post
@@ -203,6 +222,7 @@ make
 
 %postun -n libgck -p /sbin/ldconfig
 
+%if %{?enable_gtk} != no
 %post -n libgcr-ui -p /sbin/ldconfig
 
 %postun -n libgcr-ui -p /sbin/ldconfig
@@ -214,11 +234,14 @@ make
 %{_bindir}/gcr-viewer
 %{_datadir}/applications/gcr-viewer.desktop
 %{_datadir}/mime/packages/gcr-crypto-types.xml
+%endif
 
 
 %files data
 %defattr(-, root, root)
+%if %{?enable_gtk} != no
 %{_datadir}/icons/hicolor/*/apps/*
+%endif
 %dir %{_datadir}/GConf
 %dir %{_datadir}/GConf/gsettings
 %{_datadir}/GConf/gsettings/org.gnome.crypto.pgp.convert
@@ -226,20 +249,24 @@ make
 %{_datadir}/glib-2.0/schemas/org.gnome.crypto.pgp.gschema.xml
 
 
+%if %{?enable_gtk} != no
 %files prompter
 %defattr(-, root, root)
 %{_libexecdir}/gcr-prompter
 %{_datadir}/applications/gcr-prompter.desktop
 %{_datadir}/dbus-1/services/org.gnome.keyring.PrivatePrompter.service
 %{_datadir}/dbus-1/services/org.gnome.keyring.SystemPrompter.service
+%endif
 
 
 %files -n libgcr
 %defattr (-, root, root)
 %license COPYING
-%{_libdir}/libgcr-3.so.*
 %{_libdir}/libgcr-base-3.so.*
+%if %{?enable_gtk} != no
+%{_libdir}/libgcr-3.so.*
 %{_datadir}/gcr-3/
+%endif
 
 
 %files -n typelib-Gcr
@@ -249,9 +276,11 @@ make
 
 %files -n libgcr-devel
 %defattr (-, root, root)
+%if %{?enable_gtk} != no
 %{_libdir}/libgcr-3.so
-%{_libdir}/libgcr-base-3.so
 %{_libdir}/pkgconfig/gcr-3.pc
+%endif
+%{_libdir}/libgcr-base-3.so
 %{_libdir}/pkgconfig/gcr-base-3.pc
 %{_includedir}/gcr-3/
 
@@ -276,6 +305,7 @@ make
 %{_datadir}/gir-1.0/Gcr-3.gir
 
 
+%if %{?enable_gtk} != no
 %files -n libgcr-ui
 %defattr (-, root, root)
 %license COPYING
@@ -293,5 +323,6 @@ make
 %defattr (-, root, root)
 %{_libdir}/libgcr-ui-3.so
 %{_libdir}/pkgconfig/gcr-ui-3.pc
+%endif
 
 %lang_package -n libgcr
