@@ -181,9 +181,12 @@ pkgconfig_DATA = \
 gcr-base-$(GCR_MAJOR).pc: gcr-base.pc
 	cp gcr-base.pc gcr-base-$(GCR_MAJOR).pc
 
-service_in_files = \
+service_in_files =
+if WITH_GTK
+service_in_files +=
 	org.gnome.keyring.SystemPrompter.service.in \
 	org.gnome.keyring.PrivatePrompter.service.in
+endif
 servicedir       = $(DBUS_SERVICES_DIR)
 service_DATA     = $(service_in_files:.service.in=.service)
 
